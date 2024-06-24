@@ -16,7 +16,7 @@ $sidebar-color: var(--rz-white) !default;
   z-index: var(--rz-sidebar-z);
   width: var(--rz-sidebar-width);
   opacity: 1;
-  transition: var(--rz-transition-all);
+  transition: width var(--rz-transition), opacity var(--rz-transition);
 }
 
 @media (max-width: 768px) { 
