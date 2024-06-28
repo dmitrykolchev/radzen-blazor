@@ -1,6 +1,4 @@
-
-:root,
-.rz-#{$theme-name} {
+:root {
 
   /* Theme Colors */
   @each $color, $value in $rz-theme-colors-map {
