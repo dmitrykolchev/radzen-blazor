@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <NoWarn>BL9993;BL0007;BL0005</NoWarn>
-    <TargetFrameworks>netstandard2.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net5.0;net6.0;net8.0;net9.0</TargetFrameworks>
     <RazorLangVersion>3.0</RazorLangVersion>
     <LangVersion>latest</LangVersion>
     <OutputType>Library</OutputType>
@@ -22,7 +22,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DartSassBuilder" Version="1.0.0" />
+    <PackageReference Include="DartSassBuilder" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Condition="'$(TargetFramework)' == 'netstandard2.1'" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Condition="'$(TargetFramework)' == 'netstandard2.1'" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Condition="'$(TargetFramework)' == 'net5.0'" Version="5.0.0" />
@@ -33,8 +33,10 @@
 	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Condition="'$(TargetFramework)' == 'net7.0'" Version="7.0.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Components" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.0" />
+	<PackageReference Include="Microsoft.AspNetCore.Components" Condition="'$(TargetFramework)' == 'net9.0'" Version="9.0.0-preview.*" />
+	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Condition="'$(TargetFramework)' == 'net9.0'" Version="9.0.0-preview.*" />
 	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" Condition="'$(TargetFramework)' == 'netstandard2.1'" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.7" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,19 +57,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Sass Include="$(MSBuildProjectDirectory)/themes/*.scss" Exclude="$(MSBuildProjectDirectory)/themes/_*.scss" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <Sass Include="$(MSBuildProjectDirectory)/themes/*.scss" Exclude="$(MSBuildProjectDirectory)/themes/_*.scss" Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'net'" />
   </ItemGroup>
 
- <Target Name="Sass" BeforeTargets="BeforeBuild" Condition="'$(TargetFramework)' == 'net6.0'">
+ <Target Name="Sass" BeforeTargets="BeforeBuild" Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'net'">
     <PropertyGroup>
-      <_SassFileList>@(Sass->'&quot;%(FullPath)&quot;', ' ')</_SassFileList>
+      <_SassFileList>@(Sass->'"%(FullPath)"', ' ')</_SassFileList>
       <DartSassBuilderArgs>files $(_SassFileList) --outputstyle $(DartSassOutputStyle) --level $(DartSassOutputLevel)</DartSassBuilderArgs>
     </PropertyGroup>
     <Message Text="$(DartSassBuilderArgs)" Importance="$(DartSassMessageLevel)" />
     <Message Text="Converted SassFile list to argument" Importance="$(DartSassMessageLevel)" />
   </Target>
 
-  <Target Name="MoveCss" AfterTargets="AfterCompile" Condition="'$(TargetFramework)' == 'net6.0'">
+  <Target Name="MoveCss" AfterTargets="AfterCompile" Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'net'">
     <ItemGroup>
         <CssFile Include="$(MSBuildProjectDirectory)/themes/*.css" />
     </ItemGroup>
